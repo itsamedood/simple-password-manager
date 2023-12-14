@@ -91,7 +91,33 @@ function datamngr.rm()
   dotpws:close()
 end
 
+-- Generates a password of a specified length.
+function datamngr.gen()
+  math.randomseed(os.time()) -- Initialize randomseed.
+
+  local charset = "abcdefghijklmnopqrstuvwxyz0123456789`~!@#$%^&*()-_+={}[]|:;<>',./?"
+  local length
+
+  -- Get a length from the user, continuing until user provides a number.
+  while length == nil do
+    io.write("Length: ")
+    length = tonumber(io.read())
+  end
+
+  io.write("Password: \27[32m") -- Set password to be green text.
+
+  for _=1, length do
+    local c = math.random(1, #charset)
+    local char = charset:sub(c, c)
+
+    if c <= 26 then if math.random(0, 1) == 1 then char = char:upper() end end
+    io.write(char)
+  end
+
+  io.write("\27[0m\n") -- Reset color from green and end password.
+end
+
 --- Prints a list of valid commands.
-function datamngr.help() print("Cmds:\n  new\n  get\n  rm\n  help") end
+function datamngr.help() print("Cmds:\n  new\n  get\n  rm\n  gen\n  help") end
 
 return datamngr
