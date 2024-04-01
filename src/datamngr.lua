@@ -57,6 +57,10 @@ function datamngr.new()
   io.write("Password: ")
   local password = io.read()
 
+  -- Using Caesar Cipher for now, will use a much stronger encryption method later.
+
+  --
+
   dotpws:write(("%s:%s\n"):format(parent, password)) -- parent:password
   dotpws:close()
 end
@@ -91,18 +95,27 @@ function datamngr.rm()
   dotpws:close()
 end
 
--- Generates a password of a specified length.
-function datamngr.gen()
-  math.randomseed(os.time()) -- Initialize randomseed.
-
-  local charset = "abcdefghijklmnopqrstuvwxyz0123456789`~!@#$%^&*()-_+={}[]|:;<>',./?"
+--- Get a length from the user, continuing until user provides a number.
+--- @return number
+function datamngr.getpwlen()
   local length
-
-  -- Get a length from the user, continuing until user provides a number.
   while length == nil do
     io.write("Length: ")
     length = tonumber(io.read())
   end
+
+  return length
+end
+
+--- Generates a password of a specified length.
+--- @param length integer
+--- @param print boolean
+--- @return string
+function datamngr.gen(length, print)
+  math.randomseed(os.time()) -- Initialize randomseed.
+
+  local charset = "abcdefghijklmnopqrstuvwxyz0123456789`~!@#$%^&*()-_+={}[]|:;<>',./?"
+  local password = '' -- Only written to if `~print`.
 
   io.write("Password: \27[32m") -- Set password to be green text.
 
@@ -111,10 +124,11 @@ function datamngr.gen()
     local char = charset:sub(c, c)
 
     if c <= 26 then if math.random(0, 1) == 1 then char = char:upper() end end
-    io.write(char)
+    if print then io.write(char) else password = password .. char end
   end
 
-  io.write("\27[0m\n") -- Reset color from green and end password.
+  if print then io.write("\27[0m\n") end -- Reset color from green and end password.
+  return password
 end
 
 --- Prints a list of valid commands.

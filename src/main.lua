@@ -14,7 +14,7 @@ if not datamngr.checkfordotpws() then os.execute("touch .pws") end
 if cmd == "new" then datamngr.new()
 elseif cmd == "get" then datamngr.get()
 elseif cmd == "rm" then datamngr.rm()
-elseif cmd == "gen" then datamngr.gen()
+elseif cmd == "gen" then datamngr.gen(datamngr.getpwlen())
 elseif cmd == "help" then datamngr.help()
 else print(("Unknown command: %s"):format(cmd))
 end
